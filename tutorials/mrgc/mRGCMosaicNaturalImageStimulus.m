@@ -133,7 +133,8 @@ end
     % theStimulusScene = sceneSet(theStimulusScene, 'fov', imageFOVdegs);
 
     % Set this to the full path of your photograph.
-    imageFile = 'C:\Users\P70097520\OneDrive - Maastricht University\Documents\MATLAB\isetbio\tutorials\mrgc\input\Picture1.jpg';
+    [filepath,~,~] = fileparts(mfilename("fullpath"));
+    imageFile = fullfile(filepath, 'input', 'Picture1.jpg');
 
     % Example display calibration supplied with ISETCam.
     % See ./isetcam/data/displays for other examples, 
