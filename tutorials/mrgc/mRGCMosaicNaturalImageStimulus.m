@@ -25,7 +25,25 @@ arguments
 
     % See RGCMosaicConstructor.helper.utils.initializeRGCMosaicGenerationParameters
     % for what is available and to add new mosaics
-    options.rgcMosaicName (1,:) char = 'JCNpaperNasal2DegsTinyMosaic';
+    options.rgcMosaicName (1,:) char = 'JCNpaperFovealMosaic';
+    % 'VSS2024TalkTemporal3DegsMosaic' ...
+    % 'VSS2024TalkTemporal7DegsMosaic' ...
+    % 'VSS2024TalkTemporal9DegsMosaic' ...
+    % 'JCNpaperFovealMosaic' ...
+    % 'JCNpaperTemporal2DegsMosaic'  ...
+    % 'JCNpaperTemporal4DegsMosaic' ...
+    % 'JCNpaperTemporal7DegsMosaic' ...
+    % 'JCNpaperTemporal10DegsMosaic' ...
+    % 'JCNpaperTemporal14DegsMosaic' ...
+    % 'JCNpaperTemporal19DegsMosaic' ...
+    % 'JCNpaperTemporal25DegsMosaic' ...
+    % 'JCNpaperTemporal32DegsMosaic' ...
+    % 'JCNpaperNasal2DegsTinyMosaic' ...
+    % 'JCNpaperNasal7DegsMosaic' ...
+    % 'JCNpaperNasal10DegsMosaic' ...
+    % 'JCNpaperNasal14DegsMosaic' ...
+    % 'JCNpaperNasal19DegsMosaic' ...
+    % 'JCNpaperNasal25DegsMosaic' ...
 
 
     % ---- Which species to employ ----
@@ -120,7 +138,7 @@ end
     theMRGCMosaic.noiseFlag = 'none';
 
     % Input stimulus
-    imageFOVdegs = 7.0;
+    imageFOVdegs = 30.0;  % Default is 7.0
     % 128 pixels per check gives a 1024x1024 scene, i.e. ~146 pixels/deg at
     % the 7 deg FOV set below. Raising this to 256 quadruples the scene and
     % costs about 8 seconds more in oiCompute and cone excitation, while
@@ -135,7 +153,7 @@ end
 
     % Example display calibration supplied with ISETCam.
     % See ./isetcam/data/displays for other examples, 
-    % e.g. 'LCD_Apple.mat', LCD-Dell.mat, etc.
+    % e.g. 'LCD-Apple.mat', 'LCD-Dell.mat', 'LCD-HP.mat', etc.
     displayFile = 'LCD-HP.mat';
 
     % Use the wavelength samples of the already-loaded optics.
@@ -159,6 +177,18 @@ end
 
     hFig = coVisualizeRetinalStimulusConeAndMRGCmosaic(...
         6, theMRGCMosaic, theStimulusRetinalImage);
+    
+    ax = hFig.CurrentAxes;
+    layers = ax.Children;
+    isImage = isgraphics(layers, 'image');
+
+    ax.Children = [layers(~isImage); layers(isImage)];
+    ax.SortMethod = 'childorder';
+    drawnow;
+
+    if (saveFigures)
+        NicePlot.exportFigToPDF(fullfile(figureDir,'theRetinalImageWithMRGCandConeMosaic.pdf'), hFig, 300)
+    end
 
 
     % Compute the mRGC mosaic response using the default RGCRGgains
@@ -335,8 +365,8 @@ function visualizeRetinalOpticalImage(figNo, theMRGCMosaic, theStimulusRetinalIm
         NicePlot.exportFigToPDF(fullfile(figureDir,'theRetinalOpticalImage.pdf'), hFig, 300);
     end
 
-    exportDir = fullfile(isetbioRootPath,'local');
-    saveas(hFig,fullfile(exportDir,'test.tiff'),'tiff');
+    % exportDir = fullfile(isetbioRootPath,'local');
+    % saveas(hFig,fullfile(exportDir,'test.tiff'),'tiff');
 end
 
 
